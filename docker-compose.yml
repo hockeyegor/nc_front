@@ -1,0 +1,42 @@
+# Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
+version: '3'
+
+#Define services
+services:
+
+  #PostgreSQL Database for the application
+  postgres:
+    image: postgres
+    container_name: postgres
+    #Volume mounted for database for the storage
+    #ports:
+     # - 5432:5432 # Forward the exposed port 5432 on the container to port 5432 on the host machine
+
+    #Environment variable for DB name, user and password
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  #Back-end Spring Boot Application
+  aviasales2:
+    #The docker file in scrum-app build the jar and provides the docker image with the following name.
+    build: ./aviasales2
+    container_name: aviasales2
+    #Environment variables for Spring Boot Application.
+    ports:
+      - 8080:8080 # Forward the exposed port 8080 on the container to port 8080 on the host machine
+    depends_on:
+      - postgres
+
+  ngcrmdev:
+    image: ngcrmdev:latest
+    #The docker file in scrum-app build the jar and provides the docker image with the following name.
+    container_name: ngcrmdev
+    ports:
+      - 4200:81
+    depends_on:
+      - aviasales2
+#Volumes for DB data
+volumes:
+  postgres-data:

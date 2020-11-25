@@ -1,0 +1,21 @@
+.btn{
+  margin: -1vh 1vw 0 1vw;
+}
+.navigation{
+  margin-left: 20%;
+}
+table{
+  width: 100%;
+  margin-top: 5%;
+}
+.companies {
+  width: 70%;
+  margin-left: 15%;
+}
+th.mat-sort-header-sorted {
+  color: black;
+}
+.add-company {
+  margin-left: 9%;
+  width: 30%;
+}

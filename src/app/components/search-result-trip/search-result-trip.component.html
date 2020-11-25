@@ -1,0 +1,49 @@
+<button (click)="goBack()" class="btn btn-info back">{{'Go back' | translate}}</button>
+
+<div class="center" *ngFor="let post of posts | paginate: config">
+            <mat-card><div>{{'From'|translate}}: {{post.cityFrom}}
+                <button (click)="Buy(post)" routerLink="/trips/{{post.tripId}}/buy" [queryParams]="{count: post.count }" class="btn btn-outline-success pull-right">{{'Buy'|translate}}</button>
+            </div> <div>
+                 {{'To'|translate}}: {{post.cityDest}}
+                </div>
+                <div>
+                  {{'Date'|translate}}: {{post.dateFrom | date: 'yyyy-MM-dd hh:mm' }} -- {{ post.dateDest| date: 'yyyy-MM-dd hh:mm'}}
+                </div>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button type="button" [disabled]="post.count<2" class="btn btn-default btn-number" (click)="post.count = post.count - 1">
+                            <span class="glyphicon glyphicon-minus"></span>
+                        </button>
+                    </span>
+
+                    <input type="text" class="form-control input-number" value="{{post.count}}" >
+
+                    <span class="input-group-btn">
+                        <button  type="button" [disabled]="post.count>post.fullCountSeats" class="btn btn-default btn-number" (click)="post.count = post.count + 1">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                    </span>
+                </div>
+            </mat-card>
+    </div>
+
+<div id="margin">
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+  
+
+
+    <mat-grid-list cols="6">
+            <mat-grid-tile  *ngFor="let post of Hotels | async|  slice:0:6">
+                    <mat-card class="example-card" (click)="findbyCity(post)">
+                            <mat-card-header>
+                              {{post.hotelName}}
+
+                            </mat-card-header>
+                            <img src="{{post.image ?' https://drive.google.com/uc?export=view&id='+post.image :'https://drive.google.com/uc?export=view&id=1jC7zuqnV23XH-AEVlrA9BrQ9RXt_ft_8'}}" alt="">
+
+
+                          </mat-card>
+            </mat-grid-tile>
+
+          </mat-grid-list>

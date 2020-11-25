@@ -1,0 +1,139 @@
+<div *ngIf="user" id="profile" class="container">
+  <div id="main">
+    <div class="row" id="real-estates-detail">
+      <div class="col-lg-4 col-md-4 col-xs-12">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="text-center" id="author">
+                  <img class="img-thumbnail" src="https://drive.google.com/uc?export=view&id=1vnZ7oPxAM9teldmVR9CRMpO7yj1yzv1l">
+
+              <h3>{{user.firstName}} {{user.lastName}}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8 col-md-8 col-xs-12">
+        <div class="panel">
+          <div class="panel-body">
+            <ul id="myTab" class="nav nav-pills">
+              <li class="active "><a href="#detail" data-toggle="tab">О пользователе</a></li>
+              <li><a href="#change" data-toggle="tab">{{'change'| translate}} {{'password'| translate}}</a></li>
+            </ul>
+            <div id="myTabContent" class="tab-content">
+              <hr>
+              <div class="tab-pane fade active in" id="detail">
+                <h4>История профиля</h4>
+                <table class="table table-th-block">
+                  <tbody>
+                  <tr><td class="active">Логин:</td><td>{{user.userName}}</td></tr>
+                  <tr><td class="active">Фамилия:</td><td>{{user.lastName}}</td></tr>
+                  <tr><td class="active">Имя:</td><td>{{user.firstName}}</td></tr>
+                  <tr><td class="active">Почтовый адрес:</td>
+                    <td>{{user.email}}
+                      <p class="confirmed" *ngIf="user.state === 'Confirmed'; else unconfirmed">Подтверждён</p>
+                      <ng-template #unconfirmed>
+                        <p class="unconfirmed">Не подтверждён<button class="btn btn-outline-info" (click)="sendConfirmEmail(user.userName)">Отправить ещё раз</button></p>
+                      </ng-template>
+                    </td>
+                  </tr>
+                  <tr><td class="active">Текущая сумма:</td>
+                    <td *ngIf="user.wallet.sum == null; else has">0.00</td>
+                    <ng-template #has>
+                      <td>{{user.wallet.sum}} $</td>
+                    </ng-template>
+                    <app-replenish-wallet></app-replenish-wallet>
+                  </tr>
+
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="change">
+                <form (ngSubmit)="submit(changeForm.value)" [formGroup]="changeForm"  class="change-password">
+                  <mat-form-field>
+                    <input type="password" formControlName="hashPass" matInput placeholder="{{'new' | translate}} {{'password' | translate}}" >
+                  </mat-form-field>
+                  <mat-form-field>
+                    <input type="password" formControlName="repeatPass" matInput placeholder="{{'repeat' | translate}} {{'password' | translate}}" >
+                  </mat-form-field>
+                  <div *ngIf="errorPassword"
+                       class="animate error cross-validation-error-message alert alert-danger">
+                    {{'bad password' | translate}}
+                  </div>
+                  <div *ngIf="changeForm.errors?.nonIdenticalPassword"
+                       class="animate error cross-validation-error-message alert alert-danger">
+                    Пароли не совпадают
+                  </div>
+                  <button mat-flat-button class="buttons">{{'change'| translate}}</button>
+                </form>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<mat-tab-group class="slider" mat-align-tabs="center" animationDuration="1500ms">
+  <mat-tab class="slider-tab" label="Билеты">
+    <div *ngFor="let ticket of tickets"
+         class="tickets card col-lg-4 bg-dark text-light">
+      <div class="row no-gutters ml-2">
+        <div class="col-md-4" [ngClass] = "isLater(ticket.date)? 'future-trip' : 'non-active-trip'">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <div class="input-group-prepend">
+              <h4 class="card-title">Билет</h4>
+              <button type="button" class="btn btn-primary btn-ticket" routerLink="/">Ещё раз!</button>
+            </div>
+            <p class="card-text">Покупатель: {{ticket.name}} {{ticket.lastName}}</p>
+            <p class="card-text">Страна: {{ticket.cityFrom.country}}</p>
+            <p class="card-text">Дата отъезда: <br>{{ticket.date}}</p>
+            <p class="card-text">{{ticket.cityFrom.cityName}}<strong> ---> </strong>{{ticket.cityDest.cityName}}</p>
+            <p class="card-text">Цена: {{ticket.price}}</p>
+            <p class="card-text">id поездки: #{{ticket.tripId}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!tickets || tickets.length == 0" class="redirect mx-auto container">
+      <h3 class="text-center text-monospace">У вас пока нет истории поездок. Съездим?)</h3>
+      <div class="col text-center">
+        <button type="button" routerLink="/Index" class="btn btn-lg btn-info">На страницу поездок</button>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Отели">
+    <div *ngFor="let reservation of reservations"
+         class="tickets card col-lg-4 bg-dark text-light">
+      <div class="row no-gutters ml-2">
+        <div class="col-md-4">
+          <img class="img-fluid" src="{{reservation.hotel.image ?' https://drive.google.com/uc?export=view&id=' + reservation.hotel.image :'https://drive.google.com/uc?export=view&id=1jC7zuqnV23XH-AEVlrA9BrQ9RXt_ft_8'}}" />
+          <button type="button" class="btn btn-success btn-reservation" routerLink="/SearchResult/{{reservation.hotel.hotelId}}">Ещё раз!</button>
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h4 class="card-title">Отель</h4>
+            <p class="card-text">Отель: {{reservation.hotel.hotelName}}</p>
+            <p class="card-text">Страна: {{reservation.hotel.country}}</p>
+            <p class="card-text">Адрес: {{reservation.hotel.address}}</p>
+            <p class="card-text">Дата заселения: {{reservation.checkIn}}</p>
+            <p class="card-text">Дата отъезда: {{reservation.checkOut}}</p>
+            <p class="card-text">id бронирования: #{{reservation.reservationId}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!reservations || reservations.length == 0" class="redirect container mx-auto ">
+      <h3 class="text-center text-monospace">У вас пока нет истории отелей. Закажем?)</h3>
+      <div class="col text-center">
+        <button type="button" routerLink="/Index" class="btn btn-lg btn-info">На страницу Отелей</button>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>
+

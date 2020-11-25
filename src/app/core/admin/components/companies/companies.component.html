@@ -1,0 +1,86 @@
+<div class="container navigation">
+  <form [formGroup]="companySearchForm" (ngSubmit)="search(companySearchForm.value)">
+    <button (click)="showAll()" type="button" class="btn btn-lg btn-primary">{{'all' | translate}} {{'companies' | translate}}</button>
+    <mat-form-field appearance="outline">
+      <mat-label>{{'search' | translate}}</mat-label>
+      <input formControlName="name" matInput placeholder="{{'type the login' | translate}}">
+    </mat-form-field>
+    <button type="submit" class="btn btn-lg btn-info">{{'search' | translate}}</button>
+  </form>
+</div>
+<div class="container">
+  <mat-accordion>
+    <mat-expansion-panel class="add-company">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{'add' | translate}} {{'company' | translate}}
+        </mat-panel-title>
+        <mat-panel-description>
+          ...
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <form [formGroup]="addCompanyForm" (ngSubmit)="addCompany(addCompanyForm.value)"
+            class="form">
+        <mat-form-field>
+          <mat-label>{{'company-name' | translate}}</mat-label>
+          <input matInput placeholder="{{'add' | translate}} {{'company-name' | translate}}" formControlName="companyName" required>
+          <mat-error *ngIf="!addCompanyForm.controls['companyName'].valid
+         && addCompanyForm.controls['companyName'].touched">
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>{{'count of' | translate}}</mat-label>
+          <input matInput placeholder="{{'add' | translate}} {{'count of' | translate}} {{'transport' | translate}}" formControlName="transportCount" required>
+        </mat-form-field>
+        <mat-error *ngIf="!addCompanyForm.controls['transportCount'].valid
+         && addCompanyForm.controls['transportCount'].touched">
+        </mat-error>
+        <button mat-button type="submit" [disabled]="!addCompanyForm.valid">{{ 'add' | translate }}</button>
+      </form>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+</div>
+
+<div class="companies mat-elevation-z8">
+  <table mat-table matSort [dataSource]="dataSource"  >
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
+      <td mat-cell *matCellDef="let company"> {{company.companyId}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+      <td mat-cell *matCellDef="let company"> {{company.companyName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="rating">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Rating </th>
+      <td mat-cell *matCellDef="let company"> {{company.rating}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="transportCount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Count of transport </th>
+      <td mat-cell *matCellDef="let company"> {{company.transportCount}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef> Delete </th>
+      <td mat-cell *matCellDef="let company">
+        <button mat-icon-button color="warn" (click)="delete(company.companyName)">
+          <mat-icon class="mat-18">delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons>
+  </mat-paginator>
+
+</div>

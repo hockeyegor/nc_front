@@ -1,0 +1,59 @@
+<div class="index-content" *ngIf="status">
+    <div class="content">
+   
+        <form class="search" [formGroup]="firstFormGroup">
+                <mat-form-field class="form-mat-child">
+                        <input type="text" [matAutocomplete]="auto"  formControlName="firstCtrl" matInput placeholder="{{'city' | translate}}" [(ngModel)]="city" >
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <div *ngFor="let option of cityCollection | async" >
+                                <mat-option [value]="option.cityName">
+                                  {{option.cityName}}
+                                </mat-option>
+                                </div>
+                              </mat-autocomplete>
+                </mat-form-field>
+            <mat-form-field  color="accent" class="form-mat-child">
+                <input matInput   [matDatepicker]="picker1" [min]="minDate" placeholder="{{'checkIn' | translate}}" [(ngModel)]="checkIn" formControlName="firstCtrl" required>
+                <mat-datepicker-toggle  matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker  #picker1></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field color="accent" class="form-mat-child">
+                <input                          
+                matInput [matDatepicker]="picker2"  [min]="checkIn ? checkIn : minDate" placeholder="{{'checkOut' | translate}}" [(ngModel)]="checkOut" formControlName="firstCtrl" required>
+                <mat-datepicker-toggle matSuffix  [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2 color="primary" #picker2></mat-datepicker>
+              </mat-form-field>
+           
+        
+
+        <button mat-button  class="recomends-content"  [disabled]="firstFormGroup.invalid" (click)='find()' >{{'searching' | translate}}</button>
+        <button mat-button class="recomends-content" (click)="GoMap()">{{'map' | translate}}</button>
+        </form>
+            <div class="recomends-content">
+              {{'popularDest' | translate}}
+            </div>
+            <mat-grid-list cols="6" rowHeight = "200px">
+
+            <ng-container *ngFor="let post of cityCollection|async">
+
+                <mat-grid-tile [colspan]=2 [rowspan]=1>
+
+            <div class="recomends-content" (click)="findbyCity(post.cityName)">
+                <div class="recomend-hotels">
+                    <div class="recomend-hotels-image">
+                        <img src="{{post.image ?'https://drive.google.com/uc?export=view&id='+post.image : 'https://drive.google.com/uc?export=view&id=1jC7zuqnV23XH-AEVlrA9BrQ9RXt_ft_8'}}" alt="">
+                        <h2>{{post.cityName}}:<br />{{post.country}}</h2>
+                    </div>
+                </div>
+
+            </div>
+            </mat-grid-tile>
+
+        </ng-container>
+
+    </mat-grid-list>
+        </div>
+       
+    
+
+</div>

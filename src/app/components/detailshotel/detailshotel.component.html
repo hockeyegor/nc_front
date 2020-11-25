@@ -1,0 +1,64 @@
+<!-- <div *ngFor='let post of posts | async'>
+    {{post.hotelName}}
+</div>
+ <div *ngFor='let post of posts | async'>
+    <ng-container *ngFor="let item of post.rooms">
+        {{item.roomId}}
+    </ng-container>
+</div> -->
+<button (click)="goBack()" class="btn btn-info back">{{'go back' | translate}}</button>
+<div *ngIf="realHOtel">
+<mat-grid-list cols="5" rowHeight = "150px">
+    <mat-grid-tile [colspan]=1></mat-grid-tile>
+    <mat-grid-tile [colspan]=3 [rowspan]=3>
+<img class="listimg" height=100% width=100% src="{{realHOtel.image ?' https://drive.google.com/uc?export=view&id='+realHOtel.image :'https://drive.google.com/uc?export=view&id=1jC7zuqnV23XH-AEVlrA9BrQ9RXt_ft_8'}}">
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]=1 [rowspan]=3>
+    <mat-list role="list">
+        <!-- <mat-list-item *ngFor="let item of realHOtel.rooms">
+            {{item.roomId}}
+        </mat-list-item> -->
+       <mat-list-item>
+        <h3> {{realHOtel.hotelName}}</h3>
+       </mat-list-item>
+       <mat-list-item>
+           {{realHOtel.rating}}
+           <mat-icon>star</mat-icon>
+       </mat-list-item>
+       <mat-list-item>
+            {{realHOtel.address}}
+            <mat-icon>
+                map
+            </mat-icon>
+        </mat-list-item>
+        <mat-list-item>
+            <mat-icon>phone</mat-icon>
+            {{realHOtel.phoneNumber}}
+        </mat-list-item>
+        </mat-list>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]=1 [rowspan]=3></mat-grid-tile>
+    <mat-grid-tile [colspan]=1 [rowspan]=4 *ngFor="let item of realHOtel.rooms">
+    <mat-card >
+            <mat-card-header>
+              <mat-card-title>Room Type {{item.roomId}}</mat-card-title>
+
+            </mat-card-header>
+            <img mat-card-image src="assets/img/roomim.jpg" >
+            <mat-card-content>
+                    <mat-list role="list">
+                        <mat-list-item>
+                            {{item.dailyCost}}
+                            <mat-icon>euro</mat-icon>
+                        </mat-list-item>
+                    </mat-list>
+            </mat-card-content>
+            <mat-card-actions>
+              <button  mat-raised-button (click)="openDialog(item)">Reservation</button>
+            </mat-card-actions>
+          </mat-card >          <div mat-card-avatar class="example-header-image"></div>
+
+        </mat-grid-tile>
+</mat-grid-list>
+<app-comments [type]="1" [EntityId]="hotelId" [commentRating]="realHOtel.commentRating"></app-comments>
+</div>
